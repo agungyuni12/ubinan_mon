@@ -1,0 +1,59 @@
+# Nama Workflow yang akan tampil di tab Actions GitHub
+name: Deploy React App to VPS
+
+# Pemicu: Workflow ini akan berjalan setiap kali ada push ke branch 'main'
+on:
+  push:
+    branches:
+      - main
+
+# Pekerjaan yang akan dilakukan
+jobs:
+  deploy:
+    # Menggunakan runner terbaru dari Ubuntu yang disediakan GitHub
+    runs-on: ubuntu-latest
+
+    steps:
+      # Langkah 1: Mengunduh kode dari repositori
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Langkah 2: Setup Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18' # Ganti dengan versi Node.js yang Anda gunakan
+          cache: 'npm' # Menggunakan cache untuk mempercepat proses install
+
+      # Langkah 3: Install dependencies
+      - name: Install Dependencies
+        run: npm install
+
+      # Langkah 4: Build project React
+      - name: Build React App
+        run: npm run build
+
+     # Langkah 5: Deploy ke VPS menggunakan rsync action yang benar
+      - name: Deploy to VPS
+        uses: easingthemes/ssh-deploy@v4
+        with:
+          # Kunci privat SSH untuk login ke VPS
+          SSH_PRIVATE_KEY: ${{ secrets.VPS_SSH_PRIVATE_KEY }}
+          
+          # Alamat host/IP VPS Anda
+          REMOTE_HOST: ${{ secrets.VPS_HOST }}
+          
+          # User untuk login ke VPS
+          REMOTE_USER: ${{ secrets.VPS_USERNAME }}
+          
+          # Port SSH custom Anda
+          REMOTE_PORT: 2221
+          
+          # Folder sumber di runner GitHub Actions yang akan disalin
+          SOURCE: "build/"
+          
+          # Folder tujuan di VPS Anda
+          TARGET: ${{ secrets.REMOTE_PATH }}
+          
+          # Argumen tambahan untuk rsync, --delete untuk menghapus file lama di tujuan
+          ARGS: "--delete"
