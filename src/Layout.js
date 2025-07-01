@@ -70,7 +70,7 @@ const Layout = ({ children }) => {
           <div className="flex justify-between items-center">
             <p className="text-sm text-gray-400">&copy; {new Date().getFullYear()} BPS Kabupaten Dompu. All rights reserved.</p>
             <div className="flex space-x-4">
-              <a href="https://www.facebook.com/profile.php?id=100010762241662" className="text-gray-400 hover:text-white transition duration-300">Facebook</a>
+              <a href="https://www.facebook.com/profile.php?id=100010762241662" className="text-gray-400 hover:text-white transition duration-300">Bukan Facebook</a>
               <a href="https://www.instagram.com/bps_dompu/" className="text-gray-400 hover:text-white transition duration-300">Instagram</a>
             </div>
           </div>
